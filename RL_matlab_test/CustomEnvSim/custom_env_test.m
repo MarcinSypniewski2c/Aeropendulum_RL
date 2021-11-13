@@ -3,7 +3,10 @@ open_system(mdl)
 
 obsInfo = rlNumericSpec([3 1]); % vector of 3 observations: sin(theta), cos(theta) dtheta
 
-actInfo = rlFiniteSetSpec([-2 0 2]); % 
+actInfo = rlNumericSpec([1 1]); % single value
+
+actInfo.LowerLimit = -4;
+actInfo.UpperLimit = 4;
 
 obsInfo.Name = 'observations';
 actInfo.Name = 'torque';
