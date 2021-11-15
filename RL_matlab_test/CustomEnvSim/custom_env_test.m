@@ -1,9 +1,9 @@
 mdl = 'test_aero_model';
 open_system(mdl)
 
-obsInfo = rlNumericSpec([3 1]); % vector of 3 observations: sin(theta), cos(theta) dtheta
+obsInfo = rlNumericSpec([2 1]); % vector of 3 observations: sin(theta), cos(theta) dtheta
 
-actInfo = rlNumericSpec([1 1]); % single value
+actInfo = rlNumericSpec(1); % single value
 
 actInfo.LowerLimit = -4;
 actInfo.UpperLimit = 4;
@@ -13,8 +13,6 @@ actInfo.Name = 'torque';
 
 agentBlk = [mdl '/RL Agent'];
 env = rlSimulinkEnv(mdl,agentBlk,obsInfo,actInfo);
-
-env.ResetFcn = @(in) setVariable(in,'theta0',10,'Workspace',mdl);
 
 %wartosc referencyjna
 yref=60;
@@ -49,4 +47,4 @@ A=[0 1; -m*l*g*d/J -c/J];
 B=[0; Km/J];
 C=[1 0];
 
-teta=90;
+teta=10;
