@@ -23,12 +23,20 @@ UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
 UDPClientSocket.sendto(bytesToSend, serverAddressPort)
 
+f = open("sine_from_server.csv", "w")
+f.close()
  
+for i in range(100):
 
-msgFromServer = UDPClientSocket.recvfrom(bufferSize)
+    msgFromServer = UDPClientSocket.recvfrom(bufferSize)
 
- 
+    
 
-msg = "Message from Server {}".format(msgFromServer[0])
+    msg = "Message from Server {}".format(msgFromServer[0])
+    f = open("sine_from_server.csv", "a")
+    f.write(str(msgFromServer[0])[2:-1])
+    if i < 99:
+        f.write('\n')
+    f.close()
 
-print(msg)
+    print(msg)
