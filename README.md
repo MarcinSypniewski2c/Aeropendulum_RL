@@ -14,6 +14,8 @@ Póki co trenowany był tylko dla jedenj wartości referencyjnej *yref = 60*.
 
 (15.11) Sprawdziliśmy działanie modelu z wykorzsytaniem algorytmu **PPO**. Końcowo uchyb jest mniejszy ale występują oscylacje w zakresie około +/- 10 stopni. Uprościliśmy obserwacje odrzucając dtheta. W przeciwieństwie do algorytmu **DDPG**, który skutkował zadaniem najwyższej możliwej wartości momentu na aeropendulum, agent stara się manipulować tym momentem ale nie daje rady go ustalić na jednej wartości.
 
+(19.11) Modyfikacje nagrody: dodanie ujemnej nagrody od większego przyspieszenia i ujemnych nagród od uchybu od konkretnych jego wartości.
+
 ## Komunikacja
 
 ### UDP 
