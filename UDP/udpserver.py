@@ -1,50 +1,32 @@
 import socket
-from time import sleep
+import random
+import time
 
 localIP = "192.168.56.102"
-localPort = 20001
+clientIP = "192.168.56.1"
+receivePort = 8893
+sendPort = 8881
 bufferSize = 1024
 
-#msgFromServer = "Hello UDP Client"
-#bytesToSend = str.encode(msgFromServer)
+#Config
+UDPServerSend = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+UDPServerReceive = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
+
+UDPServerReceive.bind((localIP,sendPort))
+UDPServerSend.connect((clientIP,receivePort))
 
 
+print("Server up")
 
-# CREATE A DATAGRAM SOCKET
+ToC = [1,2,3,5,8,12]
 
-UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
-# BIND TO ADRESS AND IP
-
-UDPServerSocket.bind((localIP,localPort))
-
-print("UDP server up and listening")
-
-# Listen for incomin datagrams
-while(True):
-    bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
-    message = bytesAddressPair[0]
-    address = bytesAddressPair[1]
-    clientMsg = "Message from Client:{}".format(message)
-    clientIp = "Client IP Address:{}".format(address)
-    
-    print(clientMsg)
-    print(clientIp)
-    
-    # Sending a reply to client
-    ########
-    f= open("sine_wave.csv",'r')
-    lines = f.readlines()
-
-    for line in lines:
-        if line == "\n":
-            print("Empty Line")
-        else:
-            msgFromServer= line.strip()
-            bytesToSend = str.encode(msgFromServer)
-            UDPServerSocket.sendto(bytesToSend, address)
-    f.close()
+while 1:
+    answer = UDPServerReceive.recvfrom(bufferSize)
+    address = answer[1]
+    print(address)
     
 
-    ########
-
+    msgFromServer= random.choice(ToC)
+    bytesToSend = msgFromServer.to_bytes(2,'big')#str.encode(msgFromServer)
+    UDPServerSend.send(bytesToSend)
