@@ -2,19 +2,10 @@
 ## MATLAB
 
 ### Symulacja
-Aby symulacja zadziałała musimy uruchomić plik ***custom_env_test.m*** w którym są podane  parametry aeropendulum, symulacji oraz zdefiniowane środowisko.    
-Następnie musimy otworzyć **Reinforcement Learning Designer** z zakładki **APPS**, otworzyć sesję ***Aero_session.mat*** i wyeksportować naszego
-agenta ***aero_agent_v1_Trained*** do Workspace.
+Aby symulacja zadziałała musimy uruchomić plik ***ANM_params.m*** aby wczytać parametry symulacji. Potem wybieramy plik ***ANM_..._agent.m*** dla wybranego przez nas algorytmu aby stworzyć agenta i potrzebne do jego działania elementy. Następnie uruchamiamy plik ***ANM_train.m*** aby rozpocząć trenowanie. Z folderu **savedAgents** importujemy klikając na wybrany przez nas plik z agentem i upewniamy się, że w bloku *RL_Agent* w modelu symulacyjnym jest wpisana jego nazwa czyli *saved_Agent*.
 
 ### Uwagi
-(11.11) Agent jest wytrenowany dość słabo ale na ten moment da się zauważyć, że podejmuje on próbę regulacji mimo iż końcowo uchyb zostaje całkiem duży. 
-Póki co trenowany był tylko dla jedenj wartości referencyjnej *yref = 60*.
-
-(13.11) Agent teraz może zadziałać na środowisko dowolną wartością z przedziału [-4, 4] jednak nadal regulacja jest mało dokładna. Agent nie rozróżnia czy aeropendulum jest np. o 10 stopni za wysoko czy o 10 za nisko. Nagroda jest zbyt prosta. Sesja ***Aero_session_v2.mat*** zawiera nową wersję agenta z algorytmem **DDPG**.
-
-(15.11) Sprawdziliśmy działanie modelu z wykorzsytaniem algorytmu **PPO**. Końcowo uchyb jest mniejszy ale występują oscylacje w zakresie około +/- 10 stopni. Uprościliśmy obserwacje odrzucając dtheta. W przeciwieństwie do algorytmu **DDPG**, który skutkował zadaniem najwyższej możliwej wartości momentu na aeropendulum, agent stara się manipulować tym momentem ale nie daje rady go ustalić na jednej wartości.
-
-(19.11) Modyfikacje nagrody: dodanie ujemnej nagrody od większego przyspieszenia i ujemnych nagród od uchybu od konkretnych jego wartości.
+(26.11) Symulacja ma krok **Ts=0.01s** i problem pętli algebraicznej już nie występuje. Mamy w tej chwili 3 różne algorytmy, które testujemy, sprawdzając ich efektywność przy różnych wartościach ich parametrów. Algorytmy ***PPO*** oraz ***AC*** jeszcze z nieznanych przyczyn nie trzymają się ustalonych granic możliwych akcji agenta. Mimo to udało się pokazowy model agenta ***AC*** wytrenować.
 
 ## Komunikacja
 
