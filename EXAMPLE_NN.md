@@ -12,7 +12,7 @@ criticNet = getModel(getCritic(agent));
 plot(layerGraph(criticNet))
 plot(layerGraph(actorNet))
 ```
-
+**Actor po lewej, Critic po prawej**
 ## DDPG [DDPG Info](https://www.mathworks.com/help/reinforcement-learning/ref/rlddpgagent.html)
 ![DDPG Actor and Critic Nets](/RL_matlab_test/Example_Nets/DDPG/DDPG_nets.png)
 
