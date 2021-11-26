@@ -14,7 +14,12 @@ Póki co trenowany był tylko dla jedenj wartości referencyjnej *yref = 60*.
 
 (15.11) Sprawdziliśmy działanie modelu z wykorzsytaniem algorytmu **PPO**. Końcowo uchyb jest mniejszy ale występują oscylacje w zakresie około +/- 10 stopni. Uprościliśmy obserwacje odrzucając dtheta. W przeciwieństwie do algorytmu **DDPG**, który skutkował zadaniem najwyższej możliwej wartości momentu na aeropendulum, agent stara się manipulować tym momentem ale nie daje rady go ustalić na jednej wartości.
 
+(19.11) Modyfikacje nagrody: dodanie ujemnej nagrody od większego przyspieszenia i ujemnych nagród od uchybu od konkretnych jego wartości.
+
 ## Komunikacja
 
 ### UDP 
 (18.11) Przesłany sinus z Serwera do Klienta (RPi -> Windows) w Pythonie - przetestowane, klient odebrał każdy pakiet
+
+
+(22.11) Matlab przyjmuje liczby od serwera. Uzywalem RAW_SOCKET więć nie mogłem nasłuchiwać -> serwer czekał na cokolwiek wyslane ze strony klienta i odpowiadał odesłaniem wartości. Problemem ze strony Matlaba (przynajmniej u mnie) jest to, że udało mi się odbierać dane tylko za pomocą biblioteki udpport a wysylac przy dsp.UdpSender - biblioteki wzajemnie blokuja sobie porty dlatego odbieranie i wysylanie musi odbywać się na innych portach - narazie to zostawiam bo biorę się za implementacje serwera w C++
