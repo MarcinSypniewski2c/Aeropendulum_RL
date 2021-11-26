@@ -1,4 +1,5 @@
 %% Parametry modelu symulacyjnego aeropendulum
+%kwantyzacja 4095
 m = 0.120;   % masa wahadla [kg]
 
 g = 9.81;    % przyspieszenie grawitacyjne [m/s^2]
@@ -16,18 +17,15 @@ d = 0.25;    % odleglosc osi od srodka masy
              
 %alfa=0.014;    % wspolczynnik dla smigla w "nieprawidlowa" strone 
 
-%alfa_rev=0.019 % wspolczynnik dla smigla w "prawidlowa" strone
+%alfa_rev=0.019; % wspolczynnik dla smigla w "prawidlowa" strone
 
 %% Parametry symulacji
 mdl = 'Aeropendulum_new_model';
 open_system(mdl)
 
-obsInfo = rlNumericSpec([3 1]); % vector of 2 observations: sin(theta), cos(theta) thetaD
+obsInfo = rlNumericSpec([4 1]); % vector of 4 observations: sin(theta), cos(theta), thetaD, thetaDD
 
-actInfo = rlNumericSpec(1); % single value [RPM]
-
-actInfo.LowerLimit = 3000;
-actInfo.UpperLimit = 4600;
+actInfo = rlNumericSpec([1 1],'LowerLimit',0,'UpperLimit',4800); %single value RPMs
 
 obsInfo.Name = 'observations';
 actInfo.Name = 'RPMs';
@@ -35,5 +33,7 @@ actInfo.Name = 'RPMs';
 agentBlk = [mdl '/RL Agent'];
 env = rlSimulinkEnv(mdl,agentBlk,obsInfo,actInfo);
 
+env.ResetFcn = @(in) setVariable(in,'theta',0);
+
 %wartosc referencyjna
-yref=30;
+yref=45;
