@@ -13,4 +13,6 @@ Aby symulacja zadziałała musimy uruchomić plik ***ANM_params.m*** aby wczyta�
 (18.11) Przesłany sinus z Serwera do Klienta (RPi -> Windows) w Pythonie - przetestowane, klient odebrał każdy pakiet
 
 
-(22.11) Matlab przyjmuje liczby od serwera. Uzywalem RAW_SOCKET więć nie mogłem nasłuchiwać -> serwer czekał na cokolwiek wyslane ze strony klienta i odpowiadał odesłaniem wartości. Problemem ze strony Matlaba (przynajmniej u mnie) jest to, że udało mi się odbierać dane tylko za pomocą biblioteki udpport a wysylac przy dsp.UdpSender - biblioteki wzajemnie blokuja sobie porty dlatego odbieranie i wysylanie musi odbywać się na innych portach - narazie to zostawiam bo biorę się za implementacje serwera w C++
+(22.11) Matlab przyjmuje liczby od serwera. Uzywalem RAW_SOCKET więć nie mogłem nasłuchiwać -> serwer czekał na cokolwiek wyslane ze strony klienta i odpowiadał odesłaniem wartości. ~~Problemem ze strony Matlaba (przynajmniej u mnie) jest to, że udało mi się odbierać dane tylko za pomocą biblioteki udpport a wysylac przy dsp.UdpSender - biblioteki wzajemnie blokuja sobie porty dlatego odbieranie i wysylanie musi odbywać się na innych portach - narazie to zostawiam bo biorę się za implementacje serwera w C++~~ EDIT: działa z wykorzystaniem udpport i C++, z pythonem dalej nie.
+
+(27.11) Z użyciem C++ działa poprawnie biblioteki matlaba się już nie gryzą i wszystko działa poprawnie na jednym porcie
