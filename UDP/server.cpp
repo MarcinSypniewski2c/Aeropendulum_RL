@@ -3,19 +3,23 @@
 #include <string.h> // memset()
 #include <arpa/inet.h> // inet_pton()
 #include <sys/socket.h>
+#include <iostream>
+#include <fstream>
+#include <string>
 
-#define SERWER_PORT 8888
-#define SERWER_IP "192.168.56.102"
+#define SERVER_PORT 8888
+#define SERVER_IP "192.168.56.102"
 
+using namespace std;
 
 int main()
 {
-    struct sockaddr_in serwer =
+    struct sockaddr_in server =
     {
         .sin_family = AF_INET,
-        .sin_port = htons( SERWER_PORT )
+        .sin_port = htons( SERVER_PORT )
     };
-    if( inet_pton( AF_INET, SERWER_IP, & serwer.sin_addr ) <= 0 )
+    if( inet_pton( AF_INET, SERVER_IP, & server.sin_addr ) <= 0 )
     {
         perror( "inet_pton() ERROR" );
         exit( 1 );
@@ -30,8 +34,8 @@ int main()
    
     char buffer[ 4096 ] = { };
    
-    socklen_t len = sizeof( serwer );
-    if( bind( socket_,( struct sockaddr * ) & serwer, len ) < 0 )
+    socklen_t len = sizeof( server );
+    if( bind( socket_,( struct sockaddr * ) & server, len ) < 0 )
     {
         perror( "bind() ERROR" );
         exit( 3 );
@@ -53,15 +57,29 @@ int main()
        
         char buffer_ip[ 128 ] = { };
         printf( "|Client ip: %s port: %d|\n", inet_ntop( AF_INET, & client.sin_addr, buffer_ip, sizeof( buffer_ip ) ), ntohs( client.sin_port ) );
-       
-        strncpy( buffer, "Message for client", sizeof( buffer ) );
-       
-        if( sendto( socket_, buffer, strlen( buffer ), 0,( struct sockaddr * ) & client, len ) < 0 )
+       //////////////
+        fstream uchwyt; 
+        uchwyt.open("sine_wave.csv"); 
+        string linia;
+        do
         {
-            perror( "sendto() ERROR" );
-            exit( 5 );
+            getline(uchwyt, linia); 
+            const char * liniaChar = linia.c_str(); 
+            strncpy( buffer, liniaChar, sizeof( buffer ) );   
+            if( sendto( socket_, buffer, strlen( buffer ), 0,( struct sockaddr * ) & client, len ) < 0 )
+            {
+                perror( "sendto() ERROR" );
+                exit( 5 );
+            }
         }
+        while(linia != ""); 
+        uchwyt.close(); 
+
+       //////////////
+        
     }
    
     shutdown( socket_, SHUT_RDWR );
 }
+
+//gcc main.cpp -lstdc++ -o f
