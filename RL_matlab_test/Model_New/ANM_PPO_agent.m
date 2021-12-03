@@ -1,78 +1,43 @@
 %% Agent
 Ts=0.01;
-%number of hidden units in each fully conected layer
-initOpts = rlAgentInitializationOptions('NumHiddenUnit',64);
 
-%Critic Net
-criticNet = [
-    imageInputLayer([obsInfo.Dimension 1],'Normalization','none','Name','state')
-    fullyConnectedLayer(10,'Name', 'fc_in')
-    reluLayer('Name', 'relu')
-    fullyConnectedLayer(1,'Name','out')];
-% set some training options for the critic
+% Create the network to be used as approximator in the critic.
+criticNetwork = [
+    featureInputLayer(4,'Normalization','none','Name','state')
+    fullyConnectedLayer(3,'Name','HL1')
+    fullyConnectedLayer(3,'Name','HL2')
+    fullyConnectedLayer(1,'Name','CriticFC')];
+
+% Set options for the critic.
 criticOpts = rlRepresentationOptions('LearnRate',8e-3,'GradientThreshold',1);
-% create the critic representation from the network
-critic = rlValueRepresentation(criticNet,obsInfo,'Observation',{'state'},criticOpts);
 
-%Actor Net
-% input path layers (obs.dimension by 1 input and a 1 by 1 output)
-inPath = [ 
-    imageInputLayer([obsInfo.Dimension 1], 'Normalization','none','Name','state')
-    fullyConnectedLayer(10,'Name', 'ip_fc')   % 10 by 1 output
-    reluLayer('Name', 'ip_relu')              % nonlinearity
-    fullyConnectedLayer(1,'Name','ip_out') ]; % 1 by 1 output
+% Create the critic.
+critic = rlValueRepresentation(criticNetwork,obsInfo,'Observation',{'state'},criticOpts);
 
-% path layers for mean value (1 by 1 input and 1 by 1 output)
-% using scalingLayer to scale the range
-meanPath = [
-    fullyConnectedLayer(15,'Name', 'mp_fc1') % 15 by 1 output
-    reluLayer('Name', 'mp_relu')             % nonlinearity
-    fullyConnectedLayer(1,'Name','mp_fc2');  % 1 by 1 output
-    tanhLayer('Name','tanh');                % output range: (-1,1)
-    scalingLayer('Name','mp_out','Scale',actInfo.UpperLimit) ]; % output range:
+% Create the network to be used as approximator in the actor.
+actorNetwork = [
+    featureInputLayer(4,'Normalization','none','Name','state')
+    fullyConnectedLayer(3,'Name','HL1')
+    fullyConnectedLayer(2,'Name','HL2')
+    fullyConnectedLayer(201,'Name','action')];
 
-% path layers for standard deviation (1 by 1 input and output)
-% using softplus layer to make it non negative
-sdevPath = [
-    fullyConnectedLayer(15,'Name', 'vp_fc1') % 15 by 1 output
-    reluLayer('Name', 'vp_relu')             % nonlinearity
-    fullyConnectedLayer(1,'Name','vp_fc2');  % 1 by 1 output
-    softplusLayer('Name', 'vp_out') ];       % output range: (0,+Inf)
-
-% conctatenate two inputs (along dimension #3) to form a single (2 by 1) output layer
-outLayer = concatenationLayer(1,2,'Name','mean&sdev');
-
-% add layers to layerGraph network object
-actorNet = layerGraph(inPath);
-actorNet = addLayers(actorNet,meanPath);
-actorNet = addLayers(actorNet,sdevPath);
-actorNet = addLayers(actorNet,outLayer);
-
-% connect layers: you must connect the mean value path to the first input of the concatenation layer
-actorNet = connectLayers(actorNet,'ip_out','mp_fc1/in');     % connect output of inPath to meanPath input
-actorNet = connectLayers(actorNet,'ip_out','vp_fc1/in');     % connect output of inPath to sdevPath input
-actorNet = connectLayers(actorNet,'mp_out','mean&sdev/in1'); % connect output of meanPath to mean&sdev input #1
-actorNet = connectLayers(actorNet,'vp_out','mean&sdev/in2'); % connect output of sdevPath to mean&sdev input #2
-
-% set some training options for the actor
+% Set options for the actor.
 actorOpts = rlRepresentationOptions('LearnRate',8e-3,'GradientThreshold',1);
 
-% create the actor using the network
-actor = rlStochasticActorRepresentation(actorNet,obsInfo,actInfo,'Observation',{'state'},actorOpts);
+% Create the actor.
+actor = rlStochasticActorRepresentation(actorNetwork,obsInfo,actInfo,...
+    'Observation',{'state'},actorOpts);
 
-%agent Options
-agentOpts = rlPPOAgentOptions('ExperienceHorizon',512,'DiscountFactor',0.95,'SampleTime',Ts);
+agentOpts = rlPPOAgentOptions();
 
-%agent
-agent2 = rlPPOAgent(obsInfo, actInfo, agentOpts);
+agentOpts.ExperienceHorizon = 1024;
+agentOpts.DiscountFactor = 0.95;
+agentOpts.MiniBatchSize = 128;
+agentOpts.ClipFactor = 0.05;
+agentOpts.EntropyLossWeight = 0.3;
+agentOpts.SampleTime = Ts;
 
-agent1 = setActor(agent2,actor);
-agent = setCritic(agent1,critic);
-
-%Set critic learn rate, Get critic and actor networks
-%critic = getCritic(agent);
-%critic.Options.LearnRate = 1e-2;
-%agent  = setCritic(agent,critic);
+agent = rlPPOAgent(actor,critic,agentOpts);
 
 actorNet = getModel(getActor(agent));
 criticNet = getModel(getCritic(agent));

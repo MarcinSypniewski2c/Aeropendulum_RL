@@ -1,7 +1,7 @@
 %Training Options
 trainOpts = rlTrainingOptions;
 
-max_eps = 64;
+max_eps = 31;
 max_steps=2000;
 
 trainOpts.MaxEpisodes = max_eps;
@@ -19,5 +19,5 @@ trainOpts.SaveAgentDirectory = "savedAgents";
 trainOpts.Verbose = false;
 trainOpts.Plots = "training-progress";
 
-%Training
+%Training single
 trainingInfo = train(agent,env,trainOpts);

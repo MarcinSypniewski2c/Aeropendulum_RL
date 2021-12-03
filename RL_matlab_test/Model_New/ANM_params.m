@@ -24,8 +24,16 @@ mdl = 'Aeropendulum_new_model';
 open_system(mdl)
 
 obsInfo = rlNumericSpec([4 1]); % vector of 4 observations: sin(theta), cos(theta), thetaD, thetaDD
-
-actInfo = rlNumericSpec([1 1],'LowerLimit',0,'UpperLimit',4800); %single value RPMs
+% Continuous ActInfo
+%actInfo = rlNumericSpec([1 1],'LowerLimit',0,'UpperLimit',4600); %single value RPMs
+% Disc ActInfo
+%Min
+actMin = -3000;
+%Max
+actMax = 3000;
+%Step
+actStep = 30;
+actInfo = rlFiniteSetSpec([actMin:actStep:actMax]);
 
 obsInfo.Name = 'observations';
 actInfo.Name = 'RPMs';
@@ -36,4 +44,4 @@ env = rlSimulinkEnv(mdl,agentBlk,obsInfo,actInfo);
 env.ResetFcn = @(in) setVariable(in,'theta',0);
 
 %wartosc referencyjna
-yref=45;
+yref=35;

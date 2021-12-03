@@ -1,9 +1,6 @@
 %% Agent
 Ts=0.01;
 
-actInfo.LowerLimit = 0;
-actInfo.UpperLimit = 4800;
-
 % create the network to be used as approximator in the critic
 % it must take the observation signal as input and produce a scalar value
 criticNet = [

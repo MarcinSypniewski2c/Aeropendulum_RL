@@ -36,12 +36,12 @@ actor = rlDeterministicActorRepresentation(actorNetwork,obsInfo,actInfo,'Observa
 
 %agent Options
 agentOpts = rlDDPGAgentOptions("SampleTime", Ts);
-agentOpts.TargetSmoothFactor = 1e-3;
+agentOpts.TargetSmoothFactor = 1e-1;
 agentOpts.ExperienceBufferLength = 1e6;
 agentOpts.DiscountFactor = 0.99;
-agentOpts.MiniBatchSize = 32;
-agentOpts.NoiseOptions.Variance = 0.5;
-agentOpts.NoiseOptions.VarianceDecayRate = 1e-5;
+agentOpts.MiniBatchSize = 16;
+agentOpts.NoiseOptions.Variance = 20e4;
+agentOpts.NoiseOptions.VarianceDecayRate = 1e-3;
 
 %agent
 agent = rlDDPGAgent(actor, critic, agentOpts);
