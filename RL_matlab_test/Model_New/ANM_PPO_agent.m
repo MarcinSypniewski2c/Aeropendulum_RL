@@ -1,5 +1,4 @@
 %% Agent
-Ts=0.01;
 
 % Create the network to be used as approximator in the critic.
 criticNetwork = [
@@ -30,10 +29,10 @@ actor = rlStochasticActorRepresentation(actorNetwork,obsInfo,actInfo,...
 
 agentOpts = rlPPOAgentOptions();
 
-agentOpts.ExperienceHorizon = 1024;
+agentOpts.ExperienceHorizon = 512;
 agentOpts.DiscountFactor = 0.95;
-agentOpts.MiniBatchSize = 128;
-agentOpts.ClipFactor = 0.05;
+agentOpts.MiniBatchSize = 180;
+agentOpts.ClipFactor = 0.2;
 agentOpts.EntropyLossWeight = 0.3;
 agentOpts.SampleTime = Ts;
 

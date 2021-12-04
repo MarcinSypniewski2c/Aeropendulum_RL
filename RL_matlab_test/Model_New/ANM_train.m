@@ -1,8 +1,8 @@
 %Training Options
 trainOpts = rlTrainingOptions;
 
-max_eps = 31;
-max_steps=2000;
+max_eps = 101;
+max_steps=200;
 
 trainOpts.MaxEpisodes = max_eps;
 trainOpts.MaxStepsPerEpisode = max_steps;
