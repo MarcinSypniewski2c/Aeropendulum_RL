@@ -15,6 +15,8 @@ baseline = rlValueRepresentation(baselineNetwork,obsInfo,'Observation',{'state'}
 % create a network to be used as underlying actor approximator
 actorNetwork = [
     featureInputLayer(4, 'Normalization', 'none', 'Name', 'state')
+    fullyConnectedLayer(3,'Name','HL1')
+    fullyConnectedLayer(2,'Name','HL2')
     fullyConnectedLayer(201, 'Name', 'action', 'BiasLearnRateFactor', 0)];
 
 % set some options for the actor
