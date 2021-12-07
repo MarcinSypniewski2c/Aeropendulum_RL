@@ -7,6 +7,8 @@ Aby symulacja zadziałała musimy uruchomić plik ***ANM_params.m*** aby wczyta�
 ### Uwagi
 (26.11) Symulacja ma krok **Ts=0.01s** i problem pętli algebraicznej już nie występuje. Mamy w tej chwili 3 różne algorytmy, które testujemy, sprawdzając ich efektywność przy różnych wartościach ich parametrów. Algorytmy ***PPO*** oraz ***AC*** jeszcze z nieznanych przyczyn nie trzymają się ustalonych granic możliwych akcji agenta. Mimo to udało się pokazowy model agenta ***AC*** wytrenować.
 
+(04.12) Obszar akcji został zmieniony na dyskretny co pozwili przyspieszyć symulacje. Dodaliśmy 4 algorytmy dla dyskretnego obszaru akcji. Aby poprawić proces nauczania dodaliśmy blok *rate limiter* aby skok był "schodkowy". Na ten moment nie ma żadnego wytrenowanego agenta dla dyskretnego obszaru akcji.
+
 ## Komunikacja
 
 ### UDP 
