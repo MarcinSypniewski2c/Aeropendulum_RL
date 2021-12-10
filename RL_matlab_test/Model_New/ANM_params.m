@@ -23,18 +23,18 @@ Ts=0.1;
 
 %% Parametry symulacji
 mdl = 'Aeropendulum_new_model';
-open_system(mdl)
+%open_system(mdl)
 
 obsInfo = rlNumericSpec([4 1]); % vector of 4 observations: sin(theta), cos(theta), thetaD, thetaDD
 % Continuous ActInfo
 %actInfo = rlNumericSpec([1 1],'LowerLimit',0,'UpperLimit',4600); %single value RPMs
 % Disc ActInfo
 %Min
-actMin = -4600;
+actMin = -3000;
 %Max
-actMax = 4600;
+actMax = 3000;
 %Step
-actStep = 46;
+actStep = 60;
 actInfo = rlFiniteSetSpec([actMin:actStep:actMax]);
 
 obsInfo.Name = 'observations';
@@ -50,3 +50,6 @@ yref=35;
 
 rate_max = yref/10;
 rate_min = -yref/10;
+
+input_yref_vector = [10*ones(100,1); 15*ones(100,1); 20*ones(100,1); 25*ones(100,1); 30*ones(100,1);].';
+%input_yref_vector = [10*ones(100,1); 20*ones(100,1); 30*ones(100,1); 40*ones(100,1); 50*ones(100,1); 60*ones(100,1); 70*ones(100,1); 80*ones(100,1)].';

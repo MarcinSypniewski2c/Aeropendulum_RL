@@ -18,7 +18,7 @@ actorNetwork = [
     featureInputLayer(4,'Normalization','none','Name','state')
     fullyConnectedLayer(3,'Name','HL1')
     fullyConnectedLayer(2,'Name','HL2')
-    fullyConnectedLayer(201,'Name','action')];
+    fullyConnectedLayer(101,'Name','action')];
 
 % Set options for the actor.
 actorOpts = rlRepresentationOptions('LearnRate',8e-3,'GradientThreshold',1);
@@ -29,7 +29,7 @@ actor = rlStochasticActorRepresentation(actorNetwork,obsInfo,actInfo,...
 
 %agent
 agentOpts = rlACAgentOptions();
-agentOpts.NumStepsToLookAhead = 128;
+agentOpts.NumStepsToLookAhead = 32;
 agentOpts.DiscountFactor = 0.99;
 agentOpts.EntropyLossWeight = 0.3;
 agentOpts.SampleTime = Ts;
