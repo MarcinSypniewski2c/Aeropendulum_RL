@@ -18,7 +18,7 @@ actorNetwork = [
     featureInputLayer(4,'Normalization','none','Name','state')
     fullyConnectedLayer(3,'Name','HL1')
     fullyConnectedLayer(2,'Name','HL2')
-    fullyConnectedLayer(101,'Name','action')];
+    fullyConnectedLayer(201,'Name','action')];
 
 % Set options for the actor.
 actorOpts = rlRepresentationOptions('LearnRate',8e-3,'GradientThreshold',1);

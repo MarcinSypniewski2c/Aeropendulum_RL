@@ -34,8 +34,10 @@ actMin = -3000;
 %Max
 actMax = 3000;
 %Step
-actStep = 60;
+actStep = 30;
 actInfo = rlFiniteSetSpec([actMin:actStep:actMax]);
+
+Num_of_actions = actMax/actStep + abs(actMin)/actStep + 1;
 
 obsInfo.Name = 'observations';
 actInfo.Name = 'RPMs';
