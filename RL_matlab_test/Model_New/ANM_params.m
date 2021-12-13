@@ -22,19 +22,19 @@ d = 0.25;    % odleglosc osi od srodka masy
 Ts=0.1;
 
 %% Parametry symulacji
-mdl = 'Aeropendulum_new_model';
+mdl = 'Aeropendulum_new_model_v2';
 %open_system(mdl)
 
-obsInfo = rlNumericSpec([4 1]); % vector of 4 observations: sin(theta), cos(theta), thetaD, thetaDD
+obsInfo = rlNumericSpec([5 1]); % vector of 4 observations: sin(theta), cos(theta), thetaD, thetaDD, err_theta
 % Continuous ActInfo
 %actInfo = rlNumericSpec([1 1],'LowerLimit',0,'UpperLimit',4600); %single value RPMs
 % Disc ActInfo
 %Min
-actMin = -3000;
+actMin = -4600;
 %Max
-actMax = 3000;
+actMax = 4600;
 %Step
-actStep = 30;
+actStep = 46;
 actInfo = rlFiniteSetSpec([actMin:actStep:actMax]);
 
 Num_of_actions = actMax/actStep + abs(actMin)/actStep + 1;

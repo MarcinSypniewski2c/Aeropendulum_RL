@@ -2,7 +2,7 @@
 
 % Create the network to be used as approximator in the critic.
 criticNetwork = [
-    featureInputLayer(4,'Normalization','none','Name','state')
+    featureInputLayer(5,'Normalization','none','Name','state')
     fullyConnectedLayer(3,'Name','HL1')
     fullyConnectedLayer(3,'Name','HL2')
     fullyConnectedLayer(1,'Name','CriticFC')];
@@ -15,7 +15,7 @@ critic = rlValueRepresentation(criticNetwork,obsInfo,'Observation',{'state'},cri
 
 % Create the network to be used as approximator in the actor.
 actorNetwork = [
-    featureInputLayer(4,'Normalization','none','Name','state')
+    featureInputLayer(5,'Normalization','none','Name','state')
     fullyConnectedLayer(3,'Name','HL1')
     fullyConnectedLayer(2,'Name','HL2')
     fullyConnectedLayer(201,'Name','action')];
