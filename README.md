@@ -9,6 +9,8 @@ Aby symulacja zadziałała musimy uruchomić plik ***ANM_params.m*** aby wczyta�
 
 (04.12) Obszar akcji został zmieniony na dyskretny co pozwili przyspieszyć symulacje. Dodaliśmy 4 algorytmy dla dyskretnego obszaru akcji. Aby poprawić proces nauczania dodaliśmy blok *rate limiter* aby skok był "schodkowy". Na ten moment nie ma żadnego wytrenowanego agenta dla dyskretnego obszaru akcji.
 
+(13.12) Odchylenie dodane do obserwacji. Stworzony model ***Aeropendulum_new_model_v2***, który oczekuje na pozytywnie zapowiadające się testy.
+
 ## Komunikacja
 
 ### UDP 
