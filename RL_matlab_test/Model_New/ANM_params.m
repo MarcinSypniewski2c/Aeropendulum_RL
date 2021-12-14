@@ -19,7 +19,7 @@ d = 0.25;    % odleglosc osi od srodka masy
 
 %alfa_rev=0.019; % wspolczynnik dla smigla w "prawidlowa" strone
 
-Ts=0.1;
+Ts=0.01;
 
 %% Parametry symulacji
 mdl = 'Aeropendulum_new_model_v2';
@@ -34,7 +34,7 @@ actMin = -4600;
 %Max
 actMax = 4600;
 %Step
-actStep = 46;
+actStep = 92;
 actInfo = rlFiniteSetSpec([actMin:actStep:actMax]);
 
 Num_of_actions = actMax/actStep + abs(actMin)/actStep + 1;
@@ -53,5 +53,5 @@ yref=35;
 rate_max = yref/10;
 rate_min = -yref/10;
 
-input_yref_vector = [10*ones(100,1); 15*ones(100,1); 20*ones(100,1); 25*ones(100,1); 30*ones(100,1);].';
+input_yref_vector = [10*ones(1000,1); 15*ones(1000,1); 20*ones(1000,1); 25*ones(1000,1); 30*ones(1000,1);].';
 %input_yref_vector = [10*ones(100,1); 20*ones(100,1); 30*ones(100,1); 40*ones(100,1); 50*ones(100,1); 60*ones(100,1); 70*ones(100,1); 80*ones(100,1)].';

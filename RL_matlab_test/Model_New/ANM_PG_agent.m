@@ -17,7 +17,7 @@ actorNetwork = [
     featureInputLayer(4, 'Normalization', 'none', 'Name', 'state')
     fullyConnectedLayer(3,'Name','HL1')
     fullyConnectedLayer(2,'Name','HL2')
-    fullyConnectedLayer(201, 'Name', 'action', 'BiasLearnRateFactor', 0)];
+    fullyConnectedLayer(101, 'Name', 'action', 'BiasLearnRateFactor', 0)];
 
 % set some options for the actor
 actorOpts = rlRepresentationOptions('LearnRate',5e-3,'GradientThreshold',1);
@@ -30,6 +30,6 @@ agentOpts = rlPGAgentOptions();
 agentOpts.UseBaseline = true;
 agentOpts.DiscountFactor = 0.99;
 agentOpts.SampleTime = Ts;
-agentOpts.EntropyLossWeight = 0.3;
+agentOpts.EntropyLossWeight = 0.01;
 
 agent = rlPGAgent(actor,baseline,agentOpts);

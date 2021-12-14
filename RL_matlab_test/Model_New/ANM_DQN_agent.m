@@ -21,7 +21,7 @@ criticNetwork = connectLayers(criticNetwork,'CriticStateFC1','add/in1');
 criticNetwork = connectLayers(criticNetwork,'CriticActionFC1','add/in2');
 
 % set some options for the critic
-criticOpts = rlRepresentationOptions('LearnRate',0.01,'GradientThreshold',1);
+criticOpts = rlRepresentationOptions('LearnRate',0.001,'GradientThreshold',1);
 
 % create the critic based on the network approximator
 critic = rlQValueRepresentation(criticNetwork,obsInfo,actInfo,...

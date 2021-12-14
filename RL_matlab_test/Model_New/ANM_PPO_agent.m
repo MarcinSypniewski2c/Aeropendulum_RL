@@ -2,7 +2,7 @@
 
 % Create the network to be used as approximator in the critic.
 criticNetwork = [
-    featureInputLayer(4,'Normalization','none','Name','state')
+    featureInputLayer(5,'Normalization','none','Name','state')
     fullyConnectedLayer(3,'Name','HL1')
     fullyConnectedLayer(3,'Name','HL2')
     fullyConnectedLayer(1,'Name','CriticFC')];
@@ -15,10 +15,10 @@ critic = rlValueRepresentation(criticNetwork,obsInfo,'Observation',{'state'},cri
 
 % Create the network to be used as approximator in the actor.
 actorNetwork = [
-    featureInputLayer(4,'Normalization','none','Name','state')
+    featureInputLayer(5,'Normalization','none','Name','state')
     fullyConnectedLayer(3,'Name','HL1')
     fullyConnectedLayer(2,'Name','HL2')
-    fullyConnectedLayer(201,'Name','action')];
+    fullyConnectedLayer(101,'Name','action')];
 
 % Set options for the actor.
 actorOpts = rlRepresentationOptions('LearnRate',8e-3,'GradientThreshold',1);
@@ -29,11 +29,11 @@ actor = rlStochasticActorRepresentation(actorNetwork,obsInfo,actInfo,...
 
 agentOpts = rlPPOAgentOptions();
 
-agentOpts.ExperienceHorizon = 512;
+agentOpts.ExperienceHorizon = 128;
 agentOpts.DiscountFactor = 0.95;
-agentOpts.MiniBatchSize = 180;
+agentOpts.MiniBatchSize = 32;
 agentOpts.ClipFactor = 0.2;
-agentOpts.EntropyLossWeight = 0.3;
+agentOpts.EntropyLossWeight = 0.01;
 agentOpts.SampleTime = Ts;
 
 agent = rlPPOAgent(actor,critic,agentOpts);
