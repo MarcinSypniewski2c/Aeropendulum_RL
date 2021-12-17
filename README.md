@@ -11,6 +11,8 @@ Aby symulacja zadziałała musimy uruchomić plik ***ANM_params.m*** aby wczyta�
 
 (13.12) Odchylenie dodane do obserwacji. Stworzony model ***Aeropendulum_new_model_v2***, który oczekuje na pozytywnie zapowiadające się testy.
 
+(14.12) Zmiana parametru *Entropy Loss Weight* na mniejszy, odpowiadającego za stosunek exploration to exploitation, daje znaczą poprawę podczas nauki agentów.
+
 ## Komunikacja
 
 ### UDP 
