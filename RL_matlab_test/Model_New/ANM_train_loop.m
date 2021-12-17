@@ -1,4 +1,4 @@
-%Training Options
+%Training Options for single value loop
 trainOpts = rlTrainingOptions;
 
 max_eps = 100;
@@ -29,8 +29,6 @@ trainOpts.SaveAgentDirectory = "savedAgents";
 trainOpts.Verbose = false;
 trainOpts.Plots = "training-progress";
 
-%Rising slew rate
-Rs = yref;
 
 %Training loop
 for j = (1:1:8)

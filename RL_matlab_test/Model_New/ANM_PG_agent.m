@@ -2,7 +2,7 @@
 
 % create a network to be used as underlying critic approximator
 baselineNetwork = [
-    featureInputLayer(4, 'Normalization', 'none', 'Name', 'state')
+    featureInputLayer(obsInfo.Dimension(1), 'Normalization', 'none', 'Name', 'state')
     fullyConnectedLayer(2, 'Name', 'BaselineFC')
     fullyConnectedLayer(1, 'Name', 'BaselineFC2', 'BiasLearnRateFactor', 0)];
 
@@ -14,10 +14,10 @@ baseline = rlValueRepresentation(baselineNetwork,obsInfo,'Observation',{'state'}
 
 % create a network to be used as underlying actor approximator
 actorNetwork = [
-    featureInputLayer(4, 'Normalization', 'none', 'Name', 'state')
+    featureInputLayer(obsInfo.Dimension(1), 'Normalization', 'none', 'Name', 'state')
     fullyConnectedLayer(3,'Name','HL1')
     fullyConnectedLayer(2,'Name','HL2')
-    fullyConnectedLayer(101, 'Name', 'action', 'BiasLearnRateFactor', 0)];
+    fullyConnectedLayer(Num_of_actions, 'Name', 'action', 'BiasLearnRateFactor', 0)];
 
 % set some options for the actor
 actorOpts = rlRepresentationOptions('LearnRate',5e-3,'GradientThreshold',1);
