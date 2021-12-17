@@ -13,6 +13,8 @@ Aby symulacja zadziałała musimy uruchomić plik ***ANM_params.m*** aby wczyta�
 
 (14.12) Zmiana parametru *Entropy Loss Weight* na mniejszy, odpowiadającego za stosunek exploration to exploitation, daje znaczą poprawę podczas nauki agentów.
 
+(17.12) Zmiana zakresu akcji i sygnału referencyjnego aby objąć zakres kątów od -75 do 75 stopni.
+
 ## Komunikacja
 
 ### UDP 
