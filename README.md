@@ -26,3 +26,5 @@ Aby symulacja zadziałała musimy uruchomić plik ***ANM_params.m*** aby wczyta�
 (27.11) Z użyciem C++ działa poprawnie biblioteki matlaba się już nie gryzą i wszystko działa poprawnie na jednym porcie
 
 (3.01) Rpi przesyła dane które matlab przetwarza i odsyła do rpi w zapętleniu (gotowy do uzycia modelu jako regulatora)
+
+(4.01) Na podstawie bibliotek z pracy o Aeropendulum stworzone programy do odczytu kąta i zadawania prędkości w C++
