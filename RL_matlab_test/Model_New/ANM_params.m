@@ -31,11 +31,11 @@ obsInfo = rlNumericSpec([5 1]); % vector of 5 observations: sin(theta), cos(thet
 
 % Disc ActInfo
 %Min
-actMin = -5000;
+actMin = -4000;
 %Max
-actMax = 6000;
+actMax = 4900;
 %Step
-actStep = 100;
+actStep = 50;
 actInfo = rlFiniteSetSpec([actMin:actStep:actMax]);
 
 Num_of_actions = actMax/actStep + abs(actMin)/actStep + 1;
@@ -58,5 +58,5 @@ single_theta_time = 10; %s
 Num_ones = (single_theta_time/Ts);
 Ov = ones(Num_ones,1);
 
-input_yref_vector = [5*Ov; 10*Ov; 15*Ov; 20*Ov; 25*Ov; 30*Ov; 35*Ov; 40*Ov; 45*Ov; 50*Ov; 55*Ov; 60*Ov; 65*Ov; 70*Ov; 75*Ov; 70*Ov; 65*Ov; 60*Ov; 55*Ov; 50*Ov; 45*Ov; 40*Ov; 35*Ov; 30*Ov; 25*Ov; 20*Ov; 15*Ov; 10*Ov; 5*Ov; -5*Ov; -10*Ov; -15*Ov; -20*Ov; -25*Ov; -30*Ov; -35*Ov; -40*Ov; -45*Ov; -50*Ov; -55*Ov; -60*Ov; -65*Ov; -70*Ov; -75*Ov; -70*Ov; -65*Ov; -60*Ov; -55*Ov; -50*Ov; -45*Ov; -40*Ov; -35*Ov; -30*Ov; -25*Ov; -20*Ov; -15*Ov; -10*Ov; -5*Ov;].';
-%input_yref_vector = [10*ones(100,1); 20*ones(100,1); 30*ones(100,1); 40*ones(100,1); 50*ones(100,1); 60*ones(100,1); 70*ones(100,1); 80*ones(100,1)].';
+%input_yref_vector = [5*Ov; 10*Ov; 15*Ov; 20*Ov; 25*Ov; 30*Ov; 35*Ov; 40*Ov; 45*Ov; 50*Ov; 45*Ov; 40*Ov; 35*Ov; 30*Ov; 25*Ov; 20*Ov; 15*Ov; 10*Ov; 5*Ov; -5*Ov; -10*Ov; -15*Ov; -20*Ov; -25*Ov; -30*Ov; -35*Ov; -40*Ov; -45*Ov; -50*Ov; -45*Ov; -40*Ov; -35*Ov; -30*Ov; -25*Ov; -20*Ov; -15*Ov; -10*Ov; -5*Ov].';
+input_yref_vector = [5*Ov; 10*Ov; 15*Ov; 20*Ov; 25*Ov; 30*Ov; 35*Ov; 40*Ov; 45*Ov; 50*Ov].';

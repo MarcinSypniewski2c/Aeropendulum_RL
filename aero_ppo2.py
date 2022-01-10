@@ -8,12 +8,14 @@ from stable_baselines3 import PPO
 import torch as th
 from stable_baselines3.common.vec_env import VecFrameStack
 from stable_baselines3.common.evaluation import evaluate_policy
+from stable_baselines3.common.env_checker import check_env
 from scipy.integrate import odeint
 
 
 class AeroEnv(Env):
     def __init__(self):
         self.theta = 0.0
+        self.state = 0.0
         #self.thetaD = 0.0
         #self.thetaDD = 0.0
         self.rpm = 0
@@ -69,7 +71,10 @@ class AeroEnv(Env):
 
         obs = np.array([np.cos(theta), np.sin(theta)], dtype=np.float32)  # thetaD, thetaDD todo
 
-        return obs, reward, self.rpm
+        done = 0
+        info = {}
+
+        return self.state, reward, done, info
 
     def reset(self):
         self.theta = 0
@@ -81,8 +86,7 @@ class AeroEnv(Env):
 
 env = AeroEnv()
 
-from stable_baselines3.common.env_checker import check_env
-check_env(env, warn=True)
+#check_env(env, warn=True)
 
 #PPO
 policy_kwargs = dict(activation_fn=th.nn.ReLU,

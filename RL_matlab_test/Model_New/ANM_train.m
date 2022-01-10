@@ -1,7 +1,7 @@
 %Training Options for multiple ref value steps
 trainOpts = rlTrainingOptions;
 
-max_eps = 1;
+max_eps = 40;
 max_steps=length(input_yref_vector);
 
 trainOpts.MaxEpisodes = max_eps;
