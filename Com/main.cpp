@@ -6,13 +6,18 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "AS5600.h"
+#include <wiringPi.h>
+#include <unistd.h>
+#include "uartSteval.h"
+#include <ctype.h>
 
-#define SERVER_PORT 8888
-#define SERVER_IP "192.168.56.102"
+
+#define SERVER_PORT 6789
+#define SERVER_IP "192.168.1.2" //PC IP
 
 using namespace std;
 
-float var = 65.0;
 
 string convertToString(char* a, int size)
 {
@@ -26,6 +31,21 @@ string convertToString(char* a, int size)
 
 int main()
 {
+
+    // ENCODER
+    int as5600;
+    AS5600_Init(&as5600);
+    //
+
+    // MOTOR
+    UART uart;
+    uart.baud = 38400;
+    int speed=0;
+    Frame f;
+    //
+
+    StartMotor(1,uart,&f);
+    //
     struct sockaddr_in server =
     {
         .sin_family = AF_INET,
@@ -74,8 +94,10 @@ int main()
             char buffer_ip[ 128 ] = { };
             printf( "|Client ip: %s port: %d|\n", inet_ntop( AF_INET, & client.sin_addr, buffer_ip, sizeof( buffer_ip ) ), ntohs( client.sin_port ) );
         //////////////
-        
-            string s = to_string(var);
+            // ENKODER
+            float degrees = convertRawAngleToDegrees(getRawAngle());
+            //
+            string s = to_string(degrees);
             const char * liniaChar = s.c_str(); 
             strncpy( buffer, liniaChar, sizeof( buffer ) );   
             if( sendto( socket_, buffer, strlen( buffer ), 0,( struct sockaddr * ) & client, len ) < 0 )
@@ -91,11 +113,13 @@ int main()
     
             }
 
-            sUDPRetVal = convertToString(buffer,4); //TODO !
-            UDPRetVal = stoi(sUDPRetVal);
+            sUDPRetVal = convertToString(buffer,2); //TODO !
+            speed = stoi(sUDPRetVal);
 
-            var = UDPRetVal;
-            printf("%f",var);
+            printf("%d",speed);
+            //SetMotorRefSpeed(speed,1,uart,&f);
+
+            usleep(50);
 
         //////////////
             
@@ -104,5 +128,4 @@ int main()
     shutdown( socket_, SHUT_RDWR );
 }
 
-//gcc server.cpp -lstdc++ -o f
-
+//g++ main.cpp uartSteval.cpp uartSteval.h registers.h AS5600.cpp AS5600.h -lstdc++ -lwiringPi -o a
