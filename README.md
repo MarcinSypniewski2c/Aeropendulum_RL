@@ -29,6 +29,6 @@ Aby symulacja zadziałała musimy uruchomić plik ***ANM_params.m*** aby wczyta�
 
 (4.01) Na podstawie bibliotek z pracy o Aeropendulum stworzone programy do odczytu kąta i zadawania prędkości w C++
 
-# Model RL Python
+## Model RL Python
 
 (9.01) Dodanie skryptu do RL w jezyku python bez pelnej implementacji modelu aeropendulum
