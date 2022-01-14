@@ -1,28 +1,28 @@
-import gym
 from gym import Env
 from gym.spaces import Discrete, Box
 import numpy as np
-import random
 import os
 from stable_baselines3 import PPO
 import torch as th
-from stable_baselines3.common.vec_env import VecFrameStack
 from stable_baselines3.common.evaluation import evaluate_policy
+from stable_baselines3.common.monitor import Monitor
 from scipy.integrate import odeint
+from scipy.integrate import solve_ivp
+from stable_baselines3.common.env_checker import check_env
+
+
+
+def inercja(y, t, u):
+    dydt = u
+    return dydt
 
 
 class AeroEnv(Env):
     def __init__(self):
-        self.theta = 0.0
-        #self.thetaD = 0.0
-        #self.thetaDD = 0.0
-        self.rpm = 0
-        self.theta_ref = 35
-
         # RPM action
-        self.action_space = Discrete(111)
+        self.action_space = Discrete(179)
         # vector of 5 observations: sin(theta), cos(theta), thetaD, thetaDD, err_theta
-        self.observation_space = Box(-10000, 10000, shape=(4,), dtype=float)
+        self.observation_space = Box(-10000, 10000, shape=(6,), dtype=float)
 
         self.m = 0.120  # masa wahadla [kg]
         self.g = 9.81  # przyspieszenie grawitacyjne [m/s^2]
@@ -31,25 +31,10 @@ class AeroEnv(Env):
         self.J = self.m * self.l * self.l  # moment bezwladnosci [kgm^2]
         self.d = 0.25  # odleglosc osi od srodka masy
         self.y = 0.0
-        self.RPM = 0
-
         self.ts = 0.01
 
-    # def inercja(y, t, u):
-    #    dydt = -y - u
-    #    return dydt
-
     def step(self, action):
-        # set rpm (-5000 to 6000)
-        self.rpm = (action - 50) * 100  # zakres
-        self.state = 0.0
-        theta = 0
-
-        # Reward
-        theta_err = self.theta_ref - theta
-        reward = np.power(theta_err, 2) * (-0.001)
-
-        # Observations
+        # Parameters
         m = self.m
         g = self.g
         c = self.c
@@ -57,61 +42,113 @@ class AeroEnv(Env):
         J = self.J
         d = self.d
         Ts = self.ts
-        y0 = [0.0]
-        y1 = [0.0]
+        theta = 0.0
+        thetaD = 0.0
+        thetaDD = 0.0
+        rpm = 0
+        theta_ref = 35
+        reward = 0.0
 
-        # thetaDD = rad*(l/J)
+        theta = [0.0]
 
-        # SUM1 = thedaDD - (thedaD*c/J) - (np.sinus(theta)*(m*g*d/J))
+        # RPM
+        # set rpm (-4000:50:4900)
+        rpm = (action - 81) * 50  # zakres
+        # Aeropendulum
+        deg = np.polyval([3.04986021927422e-06, -0.00476887717971010, 2.51670431281220], rpm)
+        rad = deg * (np.pi / 180)
+        # thrust
+        x = rad * (l / J)
 
-        # thetaD = odeint(inercja, y0, [0.0,Ts], args=(SUM1))
-        # y0 = thetaD[1]
-        # theta_rad = odeint(inercja, y1, [0.0,Ts], args=(thetaD,1))
-        # theta = theta_rad*(180/np.pi) #radToDeg
+        thetaDD = x - (thetaD * c / J) - (np.sin(theta) * (m * g * d / J))
 
-        obs = np.array([np.cos(theta), np.sin(theta), theta_err, self.rpm], dtype=np.float32)  # thetaD, thetaDD todo
+        x1 = odeint(inercja, thetaD, [0.0, Ts], args=(thetaDD, ))
 
-        done = 0
+        thetaD = x1[1]
+        print("ThetaD:{}".format(thetaD))
+
+        x2 = odeint(inercja, theta, [0.0, Ts], args=(thetaD, ))
+        theta = x2[1]
+
+
+        theta = theta * (180 / np.pi)  # radToDeg
+        print("Theta:{}".format(theta))
+
+        # Reward
+        theta_err = theta_ref - theta
+        reward = float(theta_err*theta_err * (-0.001))
+
+
+        # Observations
+        obs = np.array([np.sin(theta), np.cos(theta), thetaD, thetaDD, theta_err, rpm], dtype=np.float32)
+
+        done = False
 
         info = {}
 
         return obs, reward, done, info
 
     def reset(self):
-        theta = 0
+        theta = 0.0
+        thetad = 0.0
+        thetadd = 0.0
         theta_err = 0.0
         self.rpm = 0
-        return np.array([np.cos(theta), np.sin(theta), theta_err, self.rpm], dtype=np.float32)
+        return np.array([np.cos(theta), np.sin(theta), thetad, thetadd, theta_err, self.rpm], dtype=np.float32)
 
     def render(self):
         pass
 
 
-env = AeroEnv()
+with open('square_signal.csv', 'r') as file:
+    signal = file.readlines()
 
-#PPO
+# Create env
+env = AeroEnv()
+env = Monitor(env)
+
+check_env(env)
+
+
+# PPO
+actions = 179
+log_path = os.path.join('Logs')
 policy_kwargs = dict(activation_fn=th.nn.ReLU,
-                     net_arch=[dict(pi=[3, 2, 111], vf=[3, 3, 1])])
+                     net_arch=[dict(pi=[6, 3, 2, actions], qf=[6, 3, 3, 1])])
+
 model = PPO("MlpPolicy",
             env,
             verbose=1,
             policy_kwargs=policy_kwargs,
+            n_steps=32,  # The number of steps to run for each environment per update
             learning_rate=0.008,
             batch_size=32,
-            gamma=0.95, #discout factor,
-            clip_range=0.2, #clip factor??
-            ent_coef=0.01 #entropy coef
+            gamma=0.95,  # discount factor,
+            clip_range=0.2,  # clip factor??
+            ent_coef=0.01,  # entropy coef
+            tensorboard_log=log_path
             )
-#Training
+# Training
+
 model.learn(total_timesteps=4000)
 
-model.save("ppo_aero")
+PPO_path = os.path.join('Saved Models', 'PPO_model')
+model.save(PPO_path)
 
+#Evaluate
+#avg_reward, x = evaluate_policy(model, env, n_eval_episodes=50) #returns average reward
+#print(avg_reward)
+
+# Test model
 obs = env.reset()
-for i in range(10):
+for i in range(5):
     action, _states = model.predict(obs)
     obs, reward, done, info = env.step(action)
-    print(obs[3])
+    print("Reward:{}".format(reward))
+    print("RPM:{}".format(obs[5]))
+    print("Obs::{}".format(obs))
+
+
 
 
 
