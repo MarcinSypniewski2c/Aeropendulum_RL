@@ -29,12 +29,19 @@ string convertToString(char* a, int size)
     return s;
 }
 
+const int ScopeOutput= 25;
+
 int main()
 {
 
     // ENCODER
     int as5600;
     AS5600_Init(&as5600);
+    //
+    
+    //GPIO
+    wiringPiSetup();
+    pinMode(25,OUTPUT);
     //
 
     // MOTOR
@@ -105,19 +112,23 @@ int main()
                 perror( "sendto() ERROR" );
                 exit( 5 );
             }
-            
+            //SCOPE
+            digitalWrite(ScopeOutput,HIGH);
+            //
             if( recvfrom( socket_, buffer, sizeof( buffer ), 0,( struct sockaddr * ) & client, & len ) < 0 )
             {
                 perror( "recvfrom() ERROR" );
                 exit( 4 );
     
             }
-
+            //SCOPE
+            digitalWrite(ScopeOutput,LOW);
+            //
             sUDPRetVal = convertToString(buffer,2); //TODO !
             speed = stoi(sUDPRetVal);
 
             printf("%d",speed);
-            //SetMotorRefSpeed(speed,1,uart,&f);
+            SetMotorRefSpeed(speed,1,uart,&f);
 
             usleep(50);
 

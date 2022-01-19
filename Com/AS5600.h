@@ -39,6 +39,7 @@ typedef enum {
 #define _mag_lo  		0x1c
 #define _mag            0x1b1c
 #define _burn  			0xff
+const float conv = 0.087;
 
 #include <stdint.h>
 AS5600_STATUS AS5600_Init(int *fd);

@@ -348,26 +348,26 @@ float convertScaledAngleToDegrees(uint16_t newAngle)
   if(maxAngle >0)
   {
     if(startPos == 0)
-      multipler = (maxAngle*0.0878)/4096;
+      multipler = (maxAngle*conv)/4096;
     else  /*startPos is set to something*/
-      multipler = ((maxAngle*0.0878)-(startPos * 0.0878))/4096;
+      multipler = ((maxAngle*conv)-(startPos * conv))/4096;
   }
   else
   {
     if((startPos == 0) && (endPos == 0))
-      multipler = 0.0878;
+      multipler = conv;
     else if ((startPos > 0 ) && (endPos == 0))
-      multipler = ((360 * 0.0878) - (startPos * 0.0878)) / 4096;
+      multipler = ((360 * conv) - (startPos * conv)) / 4096;
     else if ((startPos == 0 ) && (endPos > 0))
-      multipler = (endPos*0.0878) / 4096;
+      multipler = (endPos*conv) / 4096;
     else if ((startPos > 0 ) && (endPos > 0))
-      multipler = ((endPos*0.0878)-(startPos * 0.0878))/ 4096;
+      multipler = ((endPos*conv)-(startPos * conv))/ 4096;
   }
   return (newAngle * multipler);
 }
 float convertRawAngleToDegrees(uint16_t newAngle)
 {
   /* Raw data reports 0 - 4095 segments, which is 0.087 of a degree */
-  float retVal = (float)(newAngle) * 0.087;
+  float retVal = (float)(newAngle) * conv;
   return retVal;
 }
