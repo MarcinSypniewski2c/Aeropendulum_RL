@@ -1,7 +1,7 @@
 %Training Options for multiple ref value steps
 trainOpts = rlTrainingOptions;
 
-max_eps = 1000;
+max_eps = 2001;
 max_steps=10/Ts;
 
 trainOpts.MaxEpisodes = max_eps;
@@ -14,8 +14,8 @@ trainOpts.ScoreAveragingWindowLength = 5;
 agent_number = 0;
 save_dir = "savedAgents/Agent" + agent_number;
 
-trainOpts.SaveAgentCriteria = "EpisodeCount";
-trainOpts.SaveAgentValue = max_eps;
+trainOpts.SaveAgentCriteria = "EpisodeReward";
+trainOpts.SaveAgentValue = -20;
 trainOpts.SaveAgentDirectory = save_dir;
 
 %Plot
@@ -23,9 +23,4 @@ trainOpts.Verbose = false;
 trainOpts.Plots = "training-progress";
 
 %Training with save loop
-for e = (1:1:20)
-    trainingInfo = train(agent,env,trainOpts);
-    agent_number = agent_number + 1;
-    save_dir = "savedAgents/Agent" + agent_number;
-    trainOpts.SaveAgentDirectory = save_dir;
-end
+trainingInfo = train(agent,env,trainOpts);

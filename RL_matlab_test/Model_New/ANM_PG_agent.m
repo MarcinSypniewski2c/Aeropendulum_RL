@@ -30,6 +30,6 @@ agentOpts = rlPGAgentOptions();
 agentOpts.UseBaseline = true;
 agentOpts.DiscountFactor = 0.99;
 agentOpts.SampleTime = Ts;
-agentOpts.EntropyLossWeight = 0.01;
+agentOpts.EntropyLossWeight = 0.02;
 
 agent = rlPGAgent(actor,baseline,agentOpts);

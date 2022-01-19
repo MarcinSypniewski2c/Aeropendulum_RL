@@ -23,21 +23,21 @@ d = 0.25;    % odleglosc osi od srodka masy
 Ts=0.01;
 
 %% Parametry symulacji
-mdl = 'Aeropendulum_new_model_v2';
+mdl = 'test_aero_v2';
 load_system(mdl)
 %open_system(mdl)
 
 %Observations
-obsInfo = rlNumericSpec([6 1]); % theta, sin(theta), cos(theta), thetaD, thetaDD, err_theta
+obsInfo = rlNumericSpec([4 1]); % theta, thetaD, thetaDD, err_theta
 
 % Disc ActInfo
 %Min
-actMin = -2000;
+actMin = -4000;
 %Max
 actMax = 4000;
 %Step
-actStep = 1000;
-actInfo = rlFiniteSetSpec([actMin:actStep:actMax]);
+actStep = 500;
+actInfo = rlFiniteSetSpec([-4000, -1000, 0, 1000, 4000]);
 
 actions = size(actInfo.Elements());
 
@@ -47,19 +47,10 @@ obsInfo.Name = 'observations';
 actInfo.Name = 'actions';
 
 agentBlk = [mdl '/RL Agent'];
+
 env = rlSimulinkEnv(mdl,agentBlk,obsInfo,actInfo);
 
 env.ResetFcn = @(in) setVariable(in,'theta',0);
 
 %wartosc referencyjna
 yref=25;
-%Rising slew rate
-Rs = 5;
-
-%Vector of ones
-single_theta_time = 10; %s
-Num_ones = (single_theta_time/Ts);
-Ov = ones(Num_ones,1);
-
-%input_yref_vector = [5*Ov; 10*Ov; 15*Ov; 20*Ov; 25*Ov; 30*Ov; 35*Ov; 40*Ov; 45*Ov; 50*Ov; 45*Ov; 40*Ov; 35*Ov; 30*Ov; 25*Ov; 20*Ov; 15*Ov; 10*Ov; 5*Ov; -5*Ov; -10*Ov; -15*Ov; -20*Ov; -25*Ov; -30*Ov; -35*Ov; -40*Ov; -45*Ov; -50*Ov; -45*Ov; -40*Ov; -35*Ov; -30*Ov; -25*Ov; -20*Ov; -15*Ov; -10*Ov; -5*Ov].';
-input_yref_vector = [5*Ov; 10*Ov; 15*Ov; 20*Ov; 25*Ov; 30*Ov; 35*Ov; 40*Ov; 45*Ov; 50*Ov].';
