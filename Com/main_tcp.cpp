@@ -14,8 +14,8 @@
 #include <math.h>
 
 #define SERVER_PORT 6789
-#define SERVER_IP "192.168.2.15" //PC IP
-
+#define SERVER_IP "192.168.1.2" 
+#define MAX_CONNECTION 10
 using namespace std;
 
 
@@ -74,7 +74,7 @@ int main()
         exit( 1 );
     }
    
-    const int socket_ = socket( AF_INET, SOCK_DGRAM, 0 );
+    const int socket_ = socket( AF_INET, SOCK_STREAM, 0 );
     if(( socket_ ) < 0 )
     {
         perror( "socket() ERROR" );
@@ -90,6 +90,11 @@ int main()
         exit( 3 );
     }
    
+    if( listen( socket_, MAX_CONNECTION ) < 0 )
+    {
+        perror( "listen() ERROR" );
+        exit( 4 );
+    }
     
     struct sockaddr_in client = { };
     string sUDPRetVal = "";
@@ -97,57 +102,53 @@ int main()
        
     memset( buffer, 0, sizeof( buffer ) );
        
-    printf( "Waiting for connection...\n" );
-    if( recvfrom( socket_, buffer, sizeof( buffer ), 0,( struct sockaddr * ) & client, & len ) < 0 )
-    {
-             perror( "recvfrom() ERROR" );
-             exit( 4 );
-    
-    }
-    else {
+ 
         //printf( "|Message from client|: %s \n", buffer );
-        while( 1 )
-        {   
-            char buffer_ip[ 128 ] = { };
-            printf( "|Client ip: %s port: %d|\n", inet_ntop( AF_INET, & client.sin_addr, buffer_ip, sizeof( buffer_ip ) ), ntohs( client.sin_port ) );
-        //////////////
-            // ENKODER
-            float unscaled_degrees = convertRawAngleToDegrees(getRawAngle());
-            float degrees = normalize(unscaled_degrees,-180,180);
-			//
-            string s = to_string(degrees);
-            const char * liniaChar = s.c_str(); 
-            strncpy( buffer, liniaChar, sizeof( buffer ) );   
-            if( sendto( socket_, buffer, strlen( buffer ), 0,( struct sockaddr * ) & client, len ) < 0 )
+    while( 1 )
+    {   
+        const int clientSocket = accept( socket_,( struct sockaddr * ) & client, & len );
+        if( clientSocket < 0 )
             {
-                perror( "sendto() ERROR" );
-                exit( 5 );
+                perror( "accept() ERROR" );
             }
-            //SCOPE
-            digitalWrite(ScopeOutput,HIGH);
-            //
-            if( recvfrom( socket_, buffer, sizeof( buffer ), 0,( struct sockaddr * ) & client, & len ) < 0 )
-            {
-                perror( "recvfrom() ERROR" );
-                exit( 4 );
-    
-            }
-            //SCOPE
-            digitalWrite(ScopeOutput,LOW);
-            //
-            sUDPRetVal = convertToString(buffer,4); //TODO !
-            speed = stoi(sUDPRetVal);
 
-            printf("\n%d",speed);
-            SetMotorRefSpeed(speed,1,uart,&f);
-
-           // usleep(50);
 
         //////////////
-            
+        // ENKODER
+        float unscaled_degrees = convertRawAngleToDegrees(getRawAngle());
+        float degrees = normalize(unscaled_degrees,-180,180);
+		//
+        string s = to_string(degrees);
+        const char *liniaChar = s.c_str();
+        strncpy(buffer, liniaChar, sizeof(buffer));
+        if (send( clientSocket, buffer, strlen( buffer ), 0 ) <= 0)
+        {
+            perror("sendto() ERROR");
+            exit(5);
         }
+        //SCOPE
+        digitalWrite(ScopeOutput, HIGH);
+        //
+        if (recv( clientSocket, buffer, sizeof( buffer ), 0 ) <= 0)
+        {
+            perror("recvfrom() ERROR");
+            exit(4);
+        }
+        //SCOPE
+        digitalWrite(ScopeOutput, LOW);
+        //
+        sUDPRetVal = convertToString(buffer, 4); //TODO !
+        speed = stoi(sUDPRetVal);
+
+        printf("\n%d", speed);
+        SetMotorRefSpeed(speed, 1, uart, &f);
+
+        // usleep(50);
+
+        //////////////
     }
+    
     shutdown( socket_, SHUT_RDWR );
 }
 
-//g++ main.cpp uartSteval.cpp uartSteval.h registers.h AS5600.cpp AS5600.h -lstdc++ -lwiringPi -o a
+//g++ main_tcp.cpp uartSteval.cpp uartSteval.h registers.h AS5600.cpp AS5600.h -lstdc++ -lwiringPi -o a
