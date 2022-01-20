@@ -1,16 +1,16 @@
 %% Agent
 
-% create a network to be used as underlying critic approximator
-baselineNetwork = [
+% create critic
+criticNetwork = [
     featureInputLayer(obsInfo.Dimension(1), 'Normalization', 'none', 'Name', 'state')
     fullyConnectedLayer(4, 'Name', 'BaselineFC')
     fullyConnectedLayer(1, 'Name', 'BaselineFC2', 'BiasLearnRateFactor', 0)];
 
 % set some options for the critic
-baselineOpts = rlRepresentationOptions('LearnRate',5e-3,'GradientThreshold',1);
+criticOpts = rlRepresentationOptions('LearnRate',5e-3,'GradientThreshold',1);
 
 % create the critic based on the network approximator
-baseline = rlValueRepresentation(baselineNetwork,obsInfo,'Observation',{'state'},baselineOpts);
+critic = rlValueRepresentation(criticNetwork,obsInfo,'Observation',{'state'},criticOpts);
 
 % create a network to be used as underlying actor approximator
 actorNetwork = [
@@ -27,9 +27,9 @@ actor = rlStochasticActorRepresentation(actorNetwork,obsInfo,actInfo,...
     'Observation',{'state'},actorOpts);
 
 agentOpts = rlPGAgentOptions();
-agentOpts.UseBaseline = true;
+agentOpts.UseBaseline = false;
 agentOpts.DiscountFactor = 0.95;
 agentOpts.SampleTime = Ts;
-agentOpts.EntropyLossWeight = 0.8;
+agentOpts.EntropyLossWeight = 0.03;
 
-agent = rlPGAgent(actor,baseline,agentOpts);
+agent = rlPGAgent(actor,critic,agentOpts);

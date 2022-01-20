@@ -52,7 +52,7 @@ env = rlSimulinkEnv(mdl,agentBlk,obsInfo,actInfo);
 env.ResetFcn = @(in) setVariable(in,'theta',0);
 
 %wartosc referencyjna
-yref=25;
+yref=30;
 %Rising slew rate
 Rs = 5;
 
