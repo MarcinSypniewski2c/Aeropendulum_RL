@@ -23,18 +23,35 @@ d = 0.25;    % odleglosc osi od srodka masy
 Ts=0.01;
 
 mdl = 'Aeropendulum_test_simple';
-%open_system(mdl)
+open_system(mdl)
 
-t1=0:0.01:20
-input_yref_vector = square(t1, 50);
+% Now make one cycle with amplitude 1000 and 200 elements.
+a = ones(1, 200)
+b = a.*-1
+onePeriod = 2 * [ones(1, 200), b];
+% 200 elements is supposed to be 0.1 seconds so find out delta t.
+dt = 4 / numel(onePeriod);
+% Define number of cycles.
+numCycles = 5;
+% Copy this period that many times.
+input = repmat(onePeriod, [1, numCycles]);
+
+
+
+
+
+t = 0:0.01:20-0.01
+t2 = 0:0.01:20
 Rs = 5;
 
-python_output = readmatrix('C:\Users\Lenovo\PycharmProjects\pythonProject\python_output.csv');
-B = python_output.'
+writematrix(input,"square_signal.csv")
 
-plot(t1,input_yref_vector, 'g')
+python_output = readmatrix('C:\Users\Lenovo\PycharmProjects\pythonProject\python_output.csv');
+
+plot(t,input, 'g')
 hold on;
-plot(t1,out.theta, 'b')
+plot(t,python_output, 'r-')
 hold on;
-plot(t1,B, 'r-')
-csvwrite("square_signal",input_yref_vector)
+
+plot(t2,out.theta, 'b')
+
