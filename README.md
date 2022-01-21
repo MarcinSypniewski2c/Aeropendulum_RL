@@ -34,4 +34,5 @@ Aby symulacja zadziałała musimy uruchomić plik ***ANM_params.m*** aby wczyta�
 ## Model RL Python
 
 (9.01) Dodanie skryptu do RL w jezyku python bez pelnej implementacji modelu aeropendulum
+
 (21.01) Zaimplementowanie poprawnego działania modelu pendulum. Porównanie odpowiedzi modelu matlab z modelem python. Model aeropendulum zaimplementowany dla pełnego zakresu sygnału (-180,180). 
