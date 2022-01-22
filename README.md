@@ -31,6 +31,9 @@ Aby symulacja zadziałała musimy uruchomić plik ***ANM_params.m*** aby wczyta�
 
 (13.01) Pierwsza wersja działająca zmiana prędkości od kąta
 
+### TCP
+(22.01) Działa analogicznie do UDP
+
 ## Model RL Python
 
 (9.01) Dodanie skryptu do RL w jezyku python bez pelnej implementacji modelu aeropendulum
