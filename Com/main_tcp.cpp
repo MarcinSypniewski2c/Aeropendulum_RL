@@ -13,8 +13,8 @@
 #include <ctype.h>
 #include <math.h>
 
-#define SERVER_PORT 6789
-#define SERVER_IP "192.168.1.2" 
+#define SERVER_PORT 6788
+#define SERVER_IP "192.168.0.106" 
 #define MAX_CONNECTION 10
 using namespace std;
 
@@ -81,7 +81,8 @@ int main()
         exit( 2 );
     }
    
-    char buffer[ 4096 ] = { };
+    char buffer[ 7 ] = { };
+    char buffer2[ 4096] = {};
    
     socklen_t len = sizeof( server );
     if( bind( socket_,( struct sockaddr * ) & server, len ) < 0 )
@@ -97,21 +98,25 @@ int main()
     }
     
     struct sockaddr_in client = { };
-    string sUDPRetVal = "";
+    string sUDPRetVal = "0.00000";
     int UDPRetVal = 0;
        
-    memset( buffer, 0, sizeof( buffer ) );
-       
+    
  
         //printf( "|Message from client|: %s \n", buffer );
-    while( 1 )
-    {   
-        const int clientSocket = accept( socket_,( struct sockaddr * ) & client, & len );
+
+     const int clientSocket = accept( socket_,( struct sockaddr * ) & client, & len );
         if( clientSocket < 0 )
             {
                 perror( "accept() ERROR" );
             }
 
+    while( 1 )
+    {   
+       
+
+        memset( buffer, 0, sizeof( buffer ) );
+        memset( buffer2, 0, sizeof( buffer2 ) );
 
         //////////////
         // ENKODER
@@ -121,6 +126,7 @@ int main()
         string s = to_string(degrees);
         const char *liniaChar = s.c_str();
         strncpy(buffer, liniaChar, sizeof(buffer));
+        std::cout<< "BUFOR 1: " <<buffer << std::endl;
         if (send( clientSocket, buffer, strlen( buffer ), 0 ) <= 0)
         {
             perror("sendto() ERROR");
@@ -129,7 +135,7 @@ int main()
         //SCOPE
         digitalWrite(ScopeOutput, HIGH);
         //
-        if (recv( clientSocket, buffer, sizeof( buffer ), 0 ) <= 0)
+        if (recv( clientSocket, buffer2, sizeof( buffer2 ), 0 ) <= 0)
         {
             perror("recvfrom() ERROR");
             exit(4);
@@ -137,13 +143,14 @@ int main()
         //SCOPE
         digitalWrite(ScopeOutput, LOW);
         //
+        std::cout<<buffer2 <<std::endl;
         sUDPRetVal = convertToString(buffer, 4); //TODO !
         speed = stoi(sUDPRetVal);
 
         printf("\n%d", speed);
         SetMotorRefSpeed(speed, 1, uart, &f);
-
-        // usleep(50);
+        
+         usleep(50);
 
         //////////////
     }
