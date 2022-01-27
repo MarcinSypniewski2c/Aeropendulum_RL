@@ -12,10 +12,10 @@ trainOpts.ScoreAveragingWindowLength = 5;
 
 %Save agent
 agent_number = 3;
-save_dir = "savedAgents/Agent" + agent_number;
+save_dir = "savedAgents/PPO_v1";
 
 trainOpts.SaveAgentCriteria = "EpisodeReward";
-trainOpts.SaveAgentValue = -130;
+trainOpts.SaveAgentValue = -330;
 trainOpts.SaveAgentDirectory = save_dir;
 
 %Plot
