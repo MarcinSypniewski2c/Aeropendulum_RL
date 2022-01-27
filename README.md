@@ -2,7 +2,7 @@
 ## MATLAB
 
 ### Symulacja
-Aby symulacja zadziałała musimy uruchomić plik ***ANM_params.m*** aby wczytać parametry symulacji. Potem importujemy plik ***PG_Agent_good.mat*** i upewniamy się, że w bloku *RL_Agent* w modelu ***Aeropendulum_new_model_v2.slx*** w Simulinku wpisane jest *saved_agent*. Obserwujemy wtedy działanie najlepszego wytrenowanego agenta. Aby zmienić wartość zadaną musimy zmienić parametr *yref*.
+Aby symulacja zadziałała musimy uruchomić plik ***ANM_params.m*** aby wczytać parametry symulacji. Potem importujemy plik ***PG_Agent_good.mat*** i upewniamy się, że w bloku *RL_Agent* w modelu ***Aeropendulum_new_model_v2.slx*** w Simulinku wpisane jest *saved_agent*. Obserwujemy wtedy działanie najlepszego wytrenowanego agenta. Aby zmienić wartość zadaną musimy zmienić parametr *yref*. Wszystkie potrzebne pliki znajdują się w */RL_matlab_test/Model_New*.
 
 ### Uwagi
 (26.11) Symulacja ma krok **Ts=0.01s** i problem pętli algebraicznej już nie występuje. Mamy w tej chwili 3 różne algorytmy, które testujemy, sprawdzając ich efektywność przy różnych wartościach ich parametrów. Algorytmy ***PPO*** oraz ***AC*** jeszcze z nieznanych przyczyn nie trzymają się ustalonych granic możliwych akcji agenta. Mimo to udało się pokazowy model agenta ***AC*** wytrenować.
